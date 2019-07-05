@@ -21,7 +21,7 @@ protect.py:
 
 读入一个参数 1 或 0
 
-1 执行对全部统计文件的内容更改，在文件尾加"<?php require_once('log.php')?>"
+1 执行对全部统计文件的内容更改，在文件尾加 php require_once('log.php')
 
 0 退出程序
 
