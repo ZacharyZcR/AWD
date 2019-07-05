@@ -1,0 +1,4 @@
+http://47.103.15.169:8804/admin/upload/
+http://47.103.15.169:8803/admin/upload/
+http://47.103.15.169:8802/admin/upload/
+http://47.103.15.169:8801/admin/upload/

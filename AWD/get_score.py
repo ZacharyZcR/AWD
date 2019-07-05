@@ -6,6 +6,7 @@ import string
 import time
 
 def get_flag(i):
+	global flag_content
 	r = requests.get(get_flag_url_array[i])
 	flag_content = r.text.replace('Administrator Confirmation.\r\n','')
 	if r.status_code == 200:
@@ -20,7 +21,7 @@ def post_flag():
 	if (get_or_post == '1'):
 		get_data = {'token':token_content,'flag':flag}
 		r = requests.get(flag_url_post,params=get_data)
-		if r.status_code == 200:
+		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
 			print "The post data is:",r.url	
 			flag_count += 1
@@ -29,7 +30,7 @@ def post_flag():
 	if (post_model_choose == '1'):
 		xw_post_data = {'token':token_content,'flag':flag}
 		r = requests.post(flag_url_post,data=xw_post_data)
-		if r.status_code == 200:
+		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
 			print "The post data is:",xw_post_data
 			flag_count += 1
@@ -38,7 +39,7 @@ def post_flag():
 	if (post_model_choose == '2'):
 		json_post_data = json.dumps({'token':token_content,'flag':flag})
 		r = requests.post(url, data=json_post_data)
-		if r.status_code == 200:
+		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
 			print "The post data is:",json_post_data
 			flag_count += 1
@@ -66,10 +67,19 @@ if get_or_post == '2':
 	print "*******************************************************"
 team_number = input("Number of teams:")
 print "*******************************************************"
+
 get_flag_url_array = []
+get_flag_url_txt = []
+
+config_file=open('get_score_config.txt')
+for line in config_file:
+	line=line.strip('\r\n')
+	get_flag_url_txt.append(line)
+config_file.close()
+
 for i in range(team_number):
-	multi_url = raw_input("Input the get flag url:")
-	get_flag_url_array.append(multi_url)
+	get_flag_url_array.append(get_flag_url_txt[i])
+	print get_flag_url_array[i]
 	r = requests.get(get_flag_url_array[i])
 	if r.status_code == 200:
 		print "Flag fetch page",i+1,"works well."
@@ -81,6 +91,10 @@ print "*******************************************************"
 turns = 0
 while (1):
 	flag_count = 0
+	localtime = time.asctime(time.localtime(time.time()))
+	print "*******************************************************"
+	print localtime
+	print "*******************************************************"
 	for i in range(team_number):
 		flag=get_flag(i)
 		post_flag()
