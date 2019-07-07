@@ -11,7 +11,7 @@
 
 #### Python：
 
-protect.py:
+protect.py
 
 功能：
 
@@ -67,9 +67,54 @@ get_score.py
 
 开始循环提交flag，每轮提交成功的会在下面显示出来
 
+#### PHP：
+
+while_get_flag：
+
+上传后访问自动运行cat /flag命令，具体可以自己改
+
+有一个IP匹配设置，只有访问IP为植入者IP会报正确flag，其他IP访问会报flag{md5(random())}
+
+采用常见不死马设置
+
+while_shell
+
+常见不死马，md5=19991108
+
+base_shell.php 
+
+基础php一句话
+
+get_flag.php 
+
+上传后访问自动运行cat /flag命令，具体可以自己改
+
+有一个IP匹配设置，只有访问IP为植入者IP会报正确flag，其他IP访问会报flag{md5(random())}
+
+log.php
+
+日志检测，提供IP确认功能，正确IP访问会报确认管理员字段（暂时没有卵用）
+
+日志生成在当前目录下，每一个IP生成一个.txt文件
+
+记录get，post访问记录，对文件上传也有记录，不确定能否记录内容
+
+最后一部分提供反代代码（已经注释），可以根据规则自行使用，不赘述。
+
+
+#### TXT：
+
+trojan_config.txt
+
+trojan.py的配置文件，里面包含几行（行数与输入的队伍数量一致），每一行是基础一句话的上传目录，以/结尾
+
+get_score_config.txt
+
+get_score.py的配置文件，里面包含几行（行数与输入的队伍数量一致），每一行是你的get_flag.php的路径，以.php结尾
+
 
 #### Vision 1.0.1
 
 更新内容：
 
-在所有脚本内需要更改的地方用中文标注了，直接运行会导致报错。
+在所有脚本内需要更改的地方用中文标注了，直接运行会导致报错
