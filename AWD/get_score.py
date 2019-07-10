@@ -28,6 +28,7 @@ def post_flag():
 			print "Post flag failed!"	
 	if (post_model_choose == '1'):
 		xw_post_data = {'token':token_content,'flag':flag} 
+		headers = {'Content-Type':'application/x-www-form-urlencoded'}
 		r = requests.post(flag_url_post,data=xw_post_data)
 		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
@@ -36,8 +37,9 @@ def post_flag():
 		else:
 			print "Post flag failed!"
 	if (post_model_choose == '2'):
-		json_post_data = json.dumps({'token':token_content,'flag':flag})
-		r = requests.post(flag_url_post, data=json_post_data)
+		json_post_data = {'token':token_content,'flag':flag}
+		headers = {'Content-Type':'application/json'}
+		r = requests.post(flag_url_post, json=json_post_data)
 		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
 			print "The post data is:",json_post_data

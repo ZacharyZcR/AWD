@@ -1,7 +1,6 @@
 ﻿<?php
 	//By ZacharyZcR
 	error_reporting(0);
-	
 	//Monitor part
 	//--------------Parameters Edit--------------
 	$FILE_Fisrt_Parameter="pic";
@@ -29,7 +28,7 @@
 	$logname = $ip.'.txt';
 	$success = 'Attack Success!'."\r\n";
 	$fail = 'Attack Fail!'."\r\n";
-	$threaten_list = array("selcet","union","insert","alter","from","where","and","or","order","group","master","exec");
+	$threaten_list = array("select","union","insert","alter","from","where","and","or","order","group","master","exec","|",".","+","*","[","]",",","?",":","'");
 	$banner = '********************************************'."\r\n";
 	$warning = 'Warning.Uploading File!'."\r\n";
 	
@@ -131,7 +130,8 @@
 			fwrite($alog, $log_payload);
 			fwrite($alog, $banner);
 			fclose($alog);
-			exit(0);
+			sleep(15);
+			die("Go out hacker!");
 		};
 	};
 	
