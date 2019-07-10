@@ -67,6 +67,12 @@ get_score.py
 
 开始循环提交flag，每轮提交成功的会在下面显示出来
 
+http.py
+
+功能：
+
+循环提交get或post请求，具体用法自己研究一下代码吧，基本就是从get_score.py粘过来的
+
 #### PHP：
 
 while_get_flag：
@@ -118,3 +124,13 @@ get_score.py的配置文件，里面包含几行（行数与输入的队伍数�
 更新内容：
 
 在所有脚本内需要更改的地方用中文标注了，直接运行会导致报错
+
+#### Vision 1.1.0
+
+更新内容：
+
+protect.py修改了增加require_once的代码，现在会自动寻找<?php并在他的下一行添加
+
+log.php增加了关键字检测功能，具体列表可以自由添加
+
+更新base_shell.php为config.php
