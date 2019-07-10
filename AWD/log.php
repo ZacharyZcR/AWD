@@ -5,15 +5,10 @@
 	//Monitor part
 	//--------------Parameters Edit--------------
 	$FILE_Fisrt_Parameter="pic";
-	$adminip="117.173.217.106";
 	//-------------------------------------------
-	$ip = $_SERVER["REMOTE_ADDR"];
-	if($ip==$adminip){
-		echo("Administrator Confirmation.\r\n");
-		//system('find -name ctf');
-	};
 	//-------------------------------------------
 	date_default_timezone_set('Asia/Shanghai');
+	$ip = $_SERVER["REMOTE_ADDR"];
 	$agent    = $_SERVER["HTTP_USER_AGENT"];
 	$filename = $_SERVER['PHP_SELF'];
 	$parameter= $_SERVER["QUERY_STRING"];
@@ -34,7 +29,7 @@
 	$logname = $ip.'.txt';
 	$success = 'Attack Success!'."\r\n";
 	$fail = 'Attack Fail!'."\r\n";
-	
+	$threaten_list = array("selcet","union","insert","alter","from","where","and","or","order","group","master","exec");
 	$banner = '********************************************'."\r\n";
 	$warning = 'Warning.Uploading File!'."\r\n";
 	
@@ -126,5 +121,19 @@
 			}
 			fclose($dlog);
 	}*/
-
+	//Firewall part
+	for ($i=0;$i<=count($threaten_list);$i++){
+		if (strpos($parameter,$threaten_list[$i])!== false || strpos($payload,$threaten_list[$i])!== false){
+			$alog = fopen("attack_log.txt", "a");
+			fwrite($alog, $log_ip);
+			fwrite($alog, $log_method);
+			fwrite($alog, $log_address);
+			fwrite($alog, $log_payload);
+			fwrite($alog, $banner);
+			fclose($alog);
+			exit(0);
+		};
+	};
+	
+	
 ?>
