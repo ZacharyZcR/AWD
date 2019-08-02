@@ -1,2 +1,0 @@
-http://119.23.243.154:8801/get_flag.php
-http://119.23.243.154:8802/get_flag.php
