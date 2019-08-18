@@ -1,4 +1,4 @@
-#coding:utf-8
+# -*- coding:utf-8 -*-
 import os
 import hashlib
 import time 
@@ -63,9 +63,9 @@ def file_md5_check():
 		#print new_list
 		new_file_list = file_list[:]
 		#print new_file_list
+		sign2 = 0
 		for i in range(len(new_list)):
 			sign = 0
-			sign2 = 0
 			for j in range(len(old_list)):
 				if (new_list[i] == old_list[j] and new_file_list[i] == old_file_list[j]):
 					check_list[j] = '0'
@@ -73,13 +73,23 @@ def file_md5_check():
 					break
 			if sign == 0:
 				sign2 = 1
-				print "*******************************************************"
-				print new_file_list[i],'Changed!1'
-				print "*******************************************************"
+				print new_file_list[i].replace('./',''),'Add or Changed!'
+				os.remove(new_file_list[i])
+				try:
+					shutil.copyfile('./backup'+new_file_list[i].replace('./',''),new_file_list[i])
+					print "Repaired."
+				except:
+					print "No such file."
 		for i in range(len(check_list)):
 			if check_list[i] != '0' and sign2 != 1:
-				print check_file_list[i],'Changed!2'
+				print check_file_list[i].replace('./',''),'Disappear!'
 				sign2 = 0
+				try:
+					shutil.copyfile('./backup'+check_file_list[i].replace('./',''),check_file_list[i])
+					print "Repaired."
+				except:
+					print "No such file."
+				
 		print "*******************************************************"
 		print 'Total file:',len(new_list)
 		print "*******************************************************"
@@ -117,7 +127,7 @@ def file_function_check():
 	for i in range(len(php_list)):
 		print php_list[i]
 	print 'Total PHP file:',len(php_list)
-	danger_function_list = ['eval','system','base64']
+	danger_function_list = ['eval','system','base64','$_GET','$_POST']
 	for i in range(len(danger_function_list)):
 		for j in range(len(php_list)):
 			lines=open(php_list[j],"r").readlines()
@@ -134,7 +144,7 @@ def file_backup():
 		shutil.copytree(src,tgt)
 		print "File backup Succeed."
 	except:
-		print "File backup fail."
+		print "File backup fail.Maybe exist."
 
 print "*******************************************************"
 print "**************AWD_Auto_Defend_Framework****************"
