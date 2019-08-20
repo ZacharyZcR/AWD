@@ -47,22 +47,16 @@ def file_md5_check():
 	new_file_list = []
 	check_file_list = []
 	old_file_list = file_list[:]
-	#print old_file_list
 	old_list = md5_list[:]
-	#print old_list
 	while (1):
 		print "*******************************************************"
 		print 'The old file total:',len(old_list)
 		print "*******************************************************"
 		check_list = old_list[:]
-		#print check_list
 		check_file_list = old_file_list[:]
-		#print check_file_list
 		file_md5_build('./')
 		new_list = md5_list[:]
-		#print new_list
 		new_file_list = file_list[:]
-		#print new_file_list
 		sign2 = 0
 		for i in range(len(new_list)):
 			sign = 0
@@ -76,7 +70,7 @@ def file_md5_check():
 				print new_file_list[i].replace('./',''),'Add or Changed!'
 				os.remove(new_file_list[i])
 				try:
-					shutil.copyfile('./backup'+new_file_list[i].replace('./',''),new_file_list[i])
+					shutil.copyfile('./backup'+new_file_list[i].replace('./','/'),new_file_list[i])
 					print "Repaired."
 				except:
 					print "No such file."
@@ -85,7 +79,7 @@ def file_md5_check():
 				print check_file_list[i].replace('./',''),'Disappear!'
 				sign2 = 0
 				try:
-					shutil.copyfile('./backup'+check_file_list[i].replace('./',''),check_file_list[i])
+					shutil.copyfile('./backup'+check_file_list[i].replace('./','/'),check_file_list[i])
 					print "Repaired."
 				except:
 					print "No such file."
