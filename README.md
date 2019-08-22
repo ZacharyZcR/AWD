@@ -3,7 +3,7 @@
 
 已经在平台测试过了，全部可用，适用鲁棒性有待检查。
 
-Auther:@ZacharyZcR @Virtua1
+Author:@ZacharyZcR @Virtua1
 
 有任何问题请联系QQ：2903735704
 
