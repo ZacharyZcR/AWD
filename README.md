@@ -36,7 +36,7 @@ Extend_Module Author:@Virtua1
 
 #### 如何安装
 
-需要pip指出
+需要pip支持
 
 pip --version #查看本地pip版本
 
@@ -60,6 +60,6 @@ pip install awdphpspear
 
 #### 联系方式
 
-QQ：2903735704
+QQ:2903735704
 
 邮箱:zacharyzcr@hi-ourlife.com
