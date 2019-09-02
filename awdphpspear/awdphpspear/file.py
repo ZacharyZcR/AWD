@@ -52,7 +52,7 @@ def write_txt(target_file,content):
 		print "Content is None."
 		print "*******************************************************"
 		
-def file_tree(startpath):
+def dir_tree(startpath):
 	for root,dirs,files in os.walk(startpath,topdown=True):
 		level = root.replace(startpath,'').count(os.sep)
 		dir_indent = "|---" * (level-1) + "|---"

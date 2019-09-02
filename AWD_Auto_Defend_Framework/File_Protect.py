@@ -148,25 +148,25 @@ def file_log_add():
 			open(php_list[i],'w').writelines(lines)
 		print "Log monitoring turned on."
 		
-def file_function_check():
-	php_list=[]
-	for root,dirs,files in os.walk('./',topdown=True):
-		for f in files:
-			if f[-4:] == '.php':
-				php_list.append(root+'/'+f)
-
-	for i in range(len(php_list)):
-		print php_list[i]
-	print 'Total PHP file:',len(php_list)
-	danger_function_list = ['eval','system','base64','$_GET','$_POST']
-	for i in range(len(danger_function_list)):
-		for j in range(len(php_list)):
-			lines=open(php_list[j],"r").readlines()
-			for k in range(len(lines)):
-				if danger_function_list[i] in lines[k]:
-					print "*******************************************************"
-					print 'Warning!',php_list[j],'has danger function',danger_function_list[i],'in line:',k+1
-					print "*******************************************************"
+#def file_function_check():
+#	php_list=[]
+#	for root,dirs,files in os.walk('./',topdown=True):
+#		for f in files:
+#			if f[-4:] == '.php':
+#				php_list.append(root+'/'+f)
+#
+#	for i in range(len(php_list)):
+#		print php_list[i]
+#	print 'Total PHP file:',len(php_list)
+#	danger_function_list = ['eval','system','base64','$_GET','$_POST','flag','^']
+#	for i in range(len(danger_function_list)):
+#		for j in range(len(php_list)):
+#			lines=open(php_list[j],"r").readlines()
+#			for k in range(len(lines)):
+#				if danger_function_list[i] in lines[k]:
+#					print "*******************************************************"
+#					print 'Warning!',php_list[j],'has danger function',danger_function_list[i],'in line:',k+1
+#					print "*******************************************************"
 					
 def file_backup():
 	src = './'
