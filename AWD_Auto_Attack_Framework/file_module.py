@@ -1,7 +1,6 @@
 import os
 
-def read_array(target_file):
-	print "*******************************************************"
+def read_txt_array(target_file):
 	try:
 		target_array = []
 		line_count = 0
@@ -20,8 +19,7 @@ def read_array(target_file):
 		print "File Read Failed."
 		print "*******************************************************"
 
-def read_var(target_file):
-	print "*******************************************************"
+def read_txt_variable(target_file):
 	try:
 		config_file=open(target_file)
 		target_variable = config_file.readline()
@@ -36,30 +34,13 @@ def read_var(target_file):
 		print "*******************************************************"
 		
 def write_txt(target_file,content):
-	print "*******************************************************"
-	if content != None:
-		try:
-			config_file = open(target_file,"a")
-			config_file.write(content)
-			config_file.write("\r\n")
-			config_file.close()
-			print "File Write Succeed."
-			print "*******************************************************"
-		except:
-			print "File Write Failed."
-			print "*******************************************************"
-	else:
-		print "Content is None."
+	try:
+		config_file = open(target_file,"a")
+		config_file.write(content)
+		config_file.write("\r\n")
+		config_file.close()
+		print "File Write Succeed."
 		print "*******************************************************"
-		
-def file_tree(startpath):
-	for root,dirs,files in os.walk(startpath,topdown=True):
-		level = root.replace(startpath,'').count(os.sep)
-		dir_indent = "|---" * (level-1) + "|---"
-		file_indent = "|---" * level + "|---"
-		if not level:
-			print root.replace(startpath,'')
-		else:
-			print dir_indent+os.path.basename(root)
-		for f in files:
-			print file_indent+f
+	except:
+		print "File Write Failed."
+		print "*******************************************************"

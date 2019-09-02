@@ -1,0 +1,3 @@
+http://119.23.243.154:8801/admin/upload/
+http://119.23.243.154:8802/admin/upload/
+http://119.23.243.154:8803/admin/upload/
