@@ -2,7 +2,7 @@
 
 ## 米斯特安全团队
 
-![image]https://github.com/ZacharyZcR/AWD/blob/master/image/True_Mst.png
+![image](https://github.com/ZacharyZcR/AWD/blob/master/image/True_Mst.png)
 
 放错了...
 
