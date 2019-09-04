@@ -63,3 +63,14 @@ def dir_tree(startpath):
 			print dir_indent+os.path.basename(root)
 		for f in files:
 			print file_indent+f
+			
+def get_php_list(startpath):
+	php_list=[]
+	for root,dirs,files in os.walk(startpath,topdown=True):
+		for f in files:
+			if f[-4:] == '.php':
+				root = root.replace('./','')
+				php_list.append(root+'/'+f)
+	for i in range(len(php_list)):
+		print php_list[i]
+	return php_list

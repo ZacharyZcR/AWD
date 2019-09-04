@@ -14,7 +14,9 @@ Author:ZacharyZcR@hi-ourlife.com
 
 Extend_Module Author:@Virtua1
 
-### Vision 0.0.4
+### Vision 0.0.5
+
+增加了流量混淆的功能，增加了php文件列表功能，把RCE功能改为交互模式，修复了一些小BUG。2019年9月4日
 
 #### 停止对之前AWD框架的一切更新，但不会移除项目，有需要的师傅可以自取，对于一些基本操作不是很明白的师傅可以参考里面的脚本思路。
 
