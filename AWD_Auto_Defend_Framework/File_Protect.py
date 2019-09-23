@@ -43,7 +43,7 @@ def file_md5_build(startpath):
 			file_list.append(root+'/'+f)
 			md5_list.append(get_file_md5(root+'/'+f))
 	
-def file_md5_check():
+def file_md5_defense():
 	file_backup()
 	global root
 	file_md5_build('./')
@@ -117,6 +117,63 @@ def file_md5_check():
 		print "*******************************************************"
 		time.sleep(5)
 
+def file_md5_check():
+	file_backup()
+	global root
+	file_md5_build('./')
+	old_list = []
+	old_dir_list = []
+	new_list = []
+	new_dir_list = []
+	check_list = []
+	old_file_list = []
+	new_file_list = []
+	check_file_list = []
+	old_file_list = file_list[:]
+	old_list = md5_list[:]
+	old_dir_list = dir_list[:]
+	while (1):
+		print "*******************************************************"
+		print 'The old file total:',len(old_list)
+		print 'The old dir total:',len(old_dir_list)
+		print "*******************************************************"
+		check_list = old_list[:]
+		check_file_list = old_file_list[:]
+		file_md5_build('./')
+		new_list = md5_list[:]
+		new_file_list = file_list[:]
+		new_dir_list = dir_list[:]
+		sign2 = 0
+		
+		for i in range(len(old_dir_list)):
+			sign3 = 0
+			for j in range(len(new_dir_list)):
+				if (old_dir_list[i] == new_dir_list[j]):
+					sign3 = 1
+					break
+			if sign3 == 0:
+				sign3 = 1
+				print old_dir_list[i].replace('./',''),'Disappear!'
+		for i in range(len(new_list)):
+			sign = 0
+			for j in range(len(old_list)):
+				if (new_list[i] == old_list[j] and new_file_list[i] == old_file_list[j]):
+					check_list[j] = '0'
+					sign = 1
+					break
+			if sign == 0:
+				sign2 = 1
+				print new_file_list[i].replace('./',''),'Add or Changed!'
+		for i in range(len(check_list)):
+			if check_list[i] != '0' and sign2 != 1:
+				print check_file_list[i].replace('./',''),'Disappear!'
+				sign2 = 0
+		print "*******************************************************"
+		print 'Total file:',len(new_list)
+		print 'Total dir:',len(new_dir_list)
+		print "*******************************************************"
+		time.sleep(5)
+
 def file_log_add():
 	php_list=[]
 	for root,dirs,files in os.walk('./',topdown=True):
@@ -168,18 +225,21 @@ while (1):
 	print "*******************************************************"
 	print "1.Build dir tree."
 	print "2.Start file protect module."
-	print "3.File backup."
-	print "4.File backup remove."
-	print "5.PHP file add log."
+	print "3.Start file monitor module."
+	print "4.File backup."
+	print "5.File backup remove."
+	print "6.PHP file add log."
 	choose = int(raw_input('Please Input:'))
 	print "*******************************************************"
 	if choose == 1:
 		file_tree('./')
 	if choose == 2:
-		file_md5_check()
+		file_md5_defense()
 	if choose == 3:
-		file_backup()
+		file_md5_check()
 	if choose == 4:
-		file_backup_remove()
+		file_backup()
 	if choose == 5:
+		file_backup_remove()
+	if choose == 6:
 		file_log_add()
