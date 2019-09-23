@@ -6,6 +6,10 @@
 	$FILE_Fisrt_Parameter="pic";
 	//-------------------------------------------
 	//-------------------------------------------
+	if (!is_dir('/var/www/html/log/')){
+		mkdir('/var/www/html/log/',0777);
+		chmod('/var/www/html/log/',0777);
+	}
 	date_default_timezone_set('Asia/Shanghai');
 	$ip = $_SERVER["REMOTE_ADDR"];
 	$agent    = $_SERVER["HTTP_USER_AGENT"];
@@ -23,11 +27,10 @@
 	$type=$_FILES[$FILE_Fisrt_Parameter]['type'];
 	$tmp_name=$_FILES[$FILE_Fisrt_Parameter]['tmp_name'];
 	$file_content=file_get_contents($_FILES[$FILE_Fisrt_Parameter]['tmp_name']);
-	a
-	$logname = $ip.'.txt';
+	$logname = '/var/www/html/log/'.$ip.'.txt';
 	$success = 'Attack Success!'."\r\n";
 	$fail = 'Attack Fail!'."\r\n";
-	$threaten_list = array("select","union","insert","alter","from","where","and","or","order","group","master","exec","|",".","+","*","[","]",",","?",":","'");
+	$threaten_list = array("select","union","insert","alter","from","where","and","or","order","group","master","exec","|",".","+","*","[","]",",","?",":","'","flag","password","base64","cat","<?php","eval","assert");
 	$banner = '********************************************'."\r\n";
 	$warning = 'Warning.Uploading File!'."\r\n";
 	
@@ -122,8 +125,8 @@
 	//Firewall part
 	for ($i=0;$i<=count($threaten_list);$i++){
 		if (strpos($parameter,$threaten_list[$i])!== false || strpos($payload,$threaten_list[$i])!== false){
-			$alog = fopen("attack_log.txt", "a");
-			fwrite($alog, $$log_time);
+			$alog = fopen("/var/www/html/log/attack_log.txt", "a");
+			fwrite($alog, $log_time);
 			fwrite($alog, $log_ip);
 			fwrite($alog, $log_method);
 			fwrite($alog, $log_address);

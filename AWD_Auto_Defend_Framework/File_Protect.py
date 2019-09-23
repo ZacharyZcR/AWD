@@ -38,6 +38,8 @@ def file_md5_build(startpath):
 		for d in dirs:
 			dir_list.append(root+'/'+d)
 		for f in files:
+			if f[-4:] == '.txt':
+				continue
 			file_list.append(root+'/'+f)
 			md5_list.append(get_file_md5(root+'/'+f))
 	
@@ -114,18 +116,7 @@ def file_md5_check():
 		print 'Total dir:',len(new_dir_list)
 		print "*******************************************************"
 		time.sleep(5)
-		
-def php_file_list():
-	php_list=[]
-	for root,dirs,files in os.walk('./',topdown=True):
-		for f in files:
-			if f[-4:] == '.php':
-				php_list.append(root+'/'+f)
 
-	for i in range(len(php_list)):
-		print php_list[i]
-	print 'Total PHP file:',len(php_list)
-	
 def file_log_add():
 	php_list=[]
 	for root,dirs,files in os.walk('./',topdown=True):
@@ -134,40 +125,25 @@ def file_log_add():
 				php_list.append(root+'/'+f)
 
 	for i in range(len(php_list)):
+		php_list[i] = php_list[i].replace('//','/')
 		print php_list[i]
 	print 'Total PHP file:',len(php_list)
 	confirm = raw_input("Confirm Open Log Monitoring. 1 or 0:")
 	if confirm == '1':
 		print "*******************************************************"
 		for i in range(len(php_list)):
-			lines=open(php_list[i],"r").readlines()
+			level_dir = 0
+			for j in range(len(php_list[i])):
+				if php_list[i][j] == '/':
+					level_dir += 1
+			lines = open(php_list[i],"r").readlines()
 			length = len(lines)-1
 			for j in range(length):
 				if '<?php' in lines[j]:
-					lines[j]=lines[j].replace('<?php','<?php\nrequire_once(\'log.php\');')
+					lines[j]=lines[j].replace('<?php','<?php\nrequire_once("./'+'../'*(level_dir-1)+'log.php");')
 			open(php_list[i],'w').writelines(lines)
 		print "Log monitoring turned on."
-		
-#def file_function_check():
-#	php_list=[]
-#	for root,dirs,files in os.walk('./',topdown=True):
-#		for f in files:
-#			if f[-4:] == '.php':
-#				php_list.append(root+'/'+f)
-#
-#	for i in range(len(php_list)):
-#		print php_list[i]
-#	print 'Total PHP file:',len(php_list)
-#	danger_function_list = ['eval','system','base64','$_GET','$_POST','flag','^']
-#	for i in range(len(danger_function_list)):
-#		for j in range(len(php_list)):
-#			lines=open(php_list[j],"r").readlines()
-#			for k in range(len(lines)):
-#				if danger_function_list[i] in lines[k]:
-#					print "*******************************************************"
-#					print 'Warning!',php_list[j],'has danger function',danger_function_list[i],'in line:',k+1
-#					print "*******************************************************"
-					
+
 def file_backup():
 	src = './'
 	try:
@@ -187,16 +163,14 @@ print "*******************************************************"
 print "**************AWD_Auto_Defend_Framework****************"
 print "*******************************************************"
 global tgt
-tgt = './backup'		
+tgt = './backup'
 while (1):
 	print "*******************************************************"
-	print "1.Build file tree."
+	print "1.Build dir tree."
 	print "2.Start file protect module."
 	print "3.File backup."
 	print "4.File backup remove."
-	print "5.PHP file list."
-	print "6.PHP file add log."
-	print "7.PHP file function check."
+	print "5.PHP file add log."
 	choose = int(raw_input('Please Input:'))
 	print "*******************************************************"
 	if choose == 1:
@@ -208,8 +182,4 @@ while (1):
 	if choose == 4:
 		file_backup_remove()
 	if choose == 5:
-		php_file_list()
-	if choose == 6:
 		file_log_add()
-	if choose == 7:
-		file_function_check()
