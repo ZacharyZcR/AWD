@@ -14,6 +14,22 @@ Author:ZacharyZcR@hi-ourlife.com
 
 Extend_Module Author:@Virtua1
 
+### Vision 0.1.7
+
+增加了内存反弹shell马，具体操作详情请看新更新的文档。
+
+另外集成了一个即用的工具。
+
+pip install awdphpspear
+
+python
+
+from awdphpspear import *
+
+start()
+
+即可使用。
+
 ### Vision 0.0.7
 
 主要更新了防御模块。
