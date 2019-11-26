@@ -11,13 +11,13 @@ def read_array(target_file):
 			target_array.append(line)
 			print (line)
 			line_count += 1
-		print "Total line:",line_count
-		print "File Read Succeed."
+		print "[+]Total line:",line_count
+		print "[+]File Read Succeed."
 		print "*******************************************************"
 		return target_array
 		config_file.close()
 	except:
-		print "File Read Failed."
+		print "[-]File Read Failed."
 		print "*******************************************************"
 
 def read_var(target_file):
@@ -27,12 +27,12 @@ def read_var(target_file):
 		target_variable = config_file.readline()
 		target_variable = target_variable.strip('\r\n')
 		print "*",target_variable,"*"
-		print "File Read Succeed."
+		print "[+]File Read Succeed."
 		print "*******************************************************"
 		config_file.close()
 		return target_variable
 	except:
-		print "File Read Failed."
+		print "[-]File Read Failed."
 		print "*******************************************************"
 		
 def write_txt(target_file,content):
@@ -43,13 +43,13 @@ def write_txt(target_file,content):
 			config_file.write(content)
 			config_file.write("\r\n")
 			config_file.close()
-			print "File Write Succeed."
+			print "[+]File Write Succeed."
 			print "*******************************************************"
 		except:
-			print "File Write Failed."
+			print "[-]File Write Failed."
 			print "*******************************************************"
 	else:
-		print "Content is None."
+		print "[-]Content is None."
 		print "*******************************************************"
 		
 def dir_tree(startpath):
