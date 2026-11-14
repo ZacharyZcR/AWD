@@ -1,67 +1,30 @@
+"""HTTP helpers. Responses are returned; request errors propagate to the caller."""
+
 import requests
 
-def get(address,data):
-	print "*******************************************************"
-	try:
-		r = requests.get(address,params=data)
-		print "Target:",r.url
-		print "Succeed."
-		print "Content:",r.text
-		print "*******************************************************"
-	except:
-		print "Failed."
-		print "*******************************************************"
-		
-def post(address,data):
-	print "*******************************************************"
-	try:
-		r = requests.post(address,data=data)
-		print "Target:",r.url
-		print "Post data:",data
-		print "Succeed."
-		print "Content:",r.text
-		print "*******************************************************"
-	except:
-		print "Failed."
-		print "*******************************************************"
-		
-def post_xwf(address,data):
-	print "*******************************************************"
-	try:
-		headers = {'Content-Type':'application/x-www-form-urlencoded'}
-		r = requests.post(address,data=data)
-		print "Target:",r.url
-		print "Post data:",data
-		print "Succeed."
-		print "Content:",r.text
-		print "*******************************************************"
-	except:
-		print "Failed."
-		print "*******************************************************"
+DEFAULT_TIMEOUT = 10
 
-def post_json(address,data):
-	print "*******************************************************"
-	try:
-		headers = {'Content-Type':'application/json'}
-		r = requests.post(address,data=data)
-		print "Target:",r.url
-		print "Post data:",data
-		print "Succeed."
-		print "Content:",r.text
-		print "*******************************************************"
-	except:
-		print "Failed."
-		print "*******************************************************"
-		
-def test(address):
-	print "*******************************************************"
-	try:
-		r = requests.get(address)
-		print "Target:",r.url
-		print r.status_code
-		if r.status_code == 200:
-			print "Test Succeed"
-		print "*******************************************************"
-	except:
-		print "Test Failed."
-		print "*******************************************************"
+
+def get(address, data=None, *, timeout=DEFAULT_TIMEOUT):
+    response = requests.get(address, params=data, timeout=timeout)
+    response.raise_for_status()
+    return response
+
+
+def post(address, data=None, *, timeout=DEFAULT_TIMEOUT):
+    response = requests.post(address, data=data, timeout=timeout)
+    response.raise_for_status()
+    return response
+
+
+post_xwf = post
+
+
+def post_json(address, data, *, timeout=DEFAULT_TIMEOUT):
+    response = requests.post(address, json=data, timeout=timeout)
+    response.raise_for_status()
+    return response
+
+
+def test(address, *, timeout=DEFAULT_TIMEOUT):
+    return get(address, timeout=timeout).status_code == 200

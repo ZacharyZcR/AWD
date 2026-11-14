@@ -1,208 +1,135 @@
-# -*- coding:utf-8 -*-
-import os
+"""File monitoring and restoration from a separate backup directory."""
+
+import argparse
 import hashlib
-import time 
+import os
+from pathlib import Path
 import shutil
+import tempfile
+import time
+
 
 def get_file_md5(filename):
-	m = hashlib.md5()
-	with open(filename,'rb') as fobj:
-		while True:
-			data = fobj.read(4096)
-			if not data:
-				break
-			m.update(data)
-	return m.hexdigest()
-	
+    digest = hashlib.md5()
+    with Path(filename).open("rb") as stream:
+        for block in iter(lambda: stream.read(65536), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def file_md5_build(startpath):
-	global md5_list
-	global file_list
-	global dir_list
-	global root
-	md5_list = []
-	file_list = []
-	dir_list = []
-	for root,dirs,files in os.walk(startpath,topdown=True):
-		for d in dirs:
-			dir_list.append(root+'/'+d)
-		for f in files:
-			if f[-4:] == '.txt':
-				continue
-			file_list.append(root+'/'+f)
-			md5_list.append(get_file_md5(root+'/'+f))
-			
-def file_md5_defense():
-	file_backup()
-	global root
-	file_md5_build('./')
-	old_list = []
-	old_dir_list = []
-	new_list = []
-	new_dir_list = []
-	check_list = []
-	old_file_list = []
-	new_file_list = []
-	check_file_list = []
-	old_file_list = file_list[:]
-	old_list = md5_list[:]
-	old_dir_list = dir_list[:]
-	while (1):
-		print "*******************************************************"
-		print '[+]The old file total:',len(old_list)
-		print '[+]The old dir total:',len(old_dir_list)
-		print "*******************************************************"
-		check_list = old_list[:]
-		check_file_list = old_file_list[:]
-		file_md5_build('./')
-		new_list = md5_list[:]
-		new_file_list = file_list[:]
-		new_dir_list = dir_list[:]
-		sign2 = 0
-		
-		for i in range(len(old_dir_list)):
-			sign3 = 0
-			for j in range(len(new_dir_list)):
-				if (old_dir_list[i] == new_dir_list[j]):
-					sign3 = 1
-					break
-			if sign3 == 0:
-				sign3 = 1
-				print old_dir_list[i].replace('./',''),'Disappear!'
-				try:
-					shutil.copytree(tgt+old_dir_list[i].replace('./','/'),old_dir_list[i])
-					print "[+]Repaired."
-				except:
-					print "[-]No such dir."
-		for i in range(len(new_list)):
-			sign = 0
-			for j in range(len(old_list)):
-				if (new_list[i] == old_list[j] and new_file_list[i] == old_file_list[j]):
-					check_list[j] = '0'
-					sign = 1
-					break
-			if sign == 0:
-				sign2 = 1
-				print new_file_list[i].replace('./',''),'Add or Changed!'
-				try:
-					os.remove(new_file_list[i])
-					shutil.copyfile(tgt+new_file_list[i].replace('./','/'),new_file_list[i])
-					print "[+]Repaired."
-				except:
-					print "[-]No such file."
-		for i in range(len(check_list)):
-			if check_list[i] != '0' and sign2 != 1:
-				print check_file_list[i].replace('./',''),'Disappear!'
-				sign2 = 0
-				try:
-					shutil.copyfile(tgt+check_file_list[i].replace('./','/'),check_file_list[i])
-					print "[+]Repaired."
-				except:
-					print "[-]No such file."
-				
-		print "*******************************************************"
-		print '[+]Total file:',len(new_list)
-		print '[+]Total dir:',len(new_dir_list)
-		print "*******************************************************"
-		time.sleep(5)
+    root = Path(startpath).resolve()
+    if not root.is_dir():
+        raise NotADirectoryError(root)
+    snapshot = {}
+    for path in sorted(root.rglob("*")):
+        if path.is_symlink():
+            raise ValueError(f"Symbolic links are not supported: {path}")
+        snapshot[path.relative_to(root)] = None if path.is_dir() else get_file_md5(path)
+    return snapshot
 
-def file_md5_check():
-	file_backup()
-	global root
-	file_md5_build('./')
-	old_list = []
-	old_dir_list = []
-	new_list = []
-	new_dir_list = []
-	check_list = []
-	old_file_list = []
-	new_file_list = []
-	check_file_list = []
-	old_file_list = file_list[:]
-	old_list = md5_list[:]
-	old_dir_list = dir_list[:]
-	while (1):
-		print "*******************************************************"
-		print '[+]The old file total:',len(old_list)
-		print '[+]The old dir total:',len(old_dir_list)
-		print "*******************************************************"
-		check_list = old_list[:]
-		check_file_list = old_file_list[:]
-		file_md5_build('./')
-		new_list = md5_list[:]
-		new_file_list = file_list[:]
-		new_dir_list = dir_list[:]
-		sign2 = 0
-		
-		for i in range(len(old_dir_list)):
-			sign3 = 0
-			for j in range(len(new_dir_list)):
-				if (old_dir_list[i] == new_dir_list[j]):
-					sign3 = 1
-					break
-			if sign3 == 0:
-				sign3 = 1
-				print old_dir_list[i].replace('./',''),'Disappear!'
-		for i in range(len(new_list)):
-			sign = 0
-			for j in range(len(old_list)):
-				if (new_list[i] == old_list[j] and new_file_list[i] == old_file_list[j]):
-					check_list[j] = '0'
-					sign = 1
-					break
-			if sign == 0:
-				sign2 = 1
-				print new_file_list[i].replace('./',''),'Add or Changed!'
-		for i in range(len(check_list)):
-			if check_list[i] != '0' and sign2 != 1:
-				print check_file_list[i].replace('./',''),'Disappear!'
-				sign2 = 0
-		print "*******************************************************"
-		print '[+]Total file:',len(new_list)
-		print '[+]Total dir:',len(new_dir_list)
-		print "*******************************************************"
-		time.sleep(5)
 
-def file_log_add():
-	php_list=[]
-	for root,dirs,files in os.walk('./',topdown=True):
-		for f in files:
-			if f[-4:] == '.php':
-				php_list.append(root+'/'+f)
+def _paths(startpath, backup):
+    root = Path(startpath).resolve()
+    target = Path(backup).resolve() if backup else root.with_name(root.name + ".awd-backup")
+    if root == target or root in target.parents or target in root.parents:
+        raise ValueError("Source and backup directories must not overlap")
+    return root, target
 
-	for i in range(len(php_list)):
-		php_list[i] = php_list[i].replace('//','/')
-		print php_list[i]
-	print '[+]Total PHP file:',len(php_list)
-	confirm = raw_input("Confirm Open Log Monitoring. 1 or 0:")
-	if confirm == '1':
-		print "*******************************************************"
-		for i in range(len(php_list)):
-			level_dir = 0
-			for j in range(len(php_list[i])):
-				if php_list[i][j] == '/':
-					level_dir += 1
-			lines = open(php_list[i],"r").readlines()
-			length = len(lines)-1
-			for j in range(length):
-				if '<?php' in lines[j]:
-					lines[j]=lines[j].replace('<?php','<?php\nrequire_once("./'+'../'*(level_dir-1)+'log.php");')
-			open(php_list[i],'w').writelines(lines)
-		print "[+]Log monitoring turned on."
 
-def file_backup():
-	src = './'
-	try:
-		shutil.copytree(src,tgt)
-		print "[+]File backup succeed."
-	except:
-		print "[-]File backup fail.Maybe it exists."
-		
-def file_backup_remove():
-	try:
-		shutil.rmtree(tgt)
-		print "[+]File backup remove succeed."
-	except:
-		print "[-]File backup remove fail.Maybe it doesn't exist."
+def file_backup(startpath=".", backup=None):
+    root, target = _paths(startpath, backup)
+    file_md5_build(root)
+    shutil.copytree(root, target)
+    return target
 
-global tgt
-tgt = './backup'
+
+def _changes(baseline, current):
+    added = current.keys() - baseline.keys()
+    removed = baseline.keys() - current.keys()
+    changed = {path for path in baseline.keys() & current.keys() if baseline[path] != current[path]}
+    return added, removed, changed
+
+
+def _copy_file(source, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary = tempfile.mkstemp(dir=destination.parent)
+    os.close(descriptor)
+    try:
+        shutil.copy2(source, temporary)
+        os.replace(temporary, destination)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def _remove(path):
+    if path.is_dir():
+        shutil.rmtree(path)
+    else:
+        path.unlink(missing_ok=True)
+
+
+def _restore(root, backup, baseline, current):
+    added, removed, changed = _changes(baseline, current)
+    for relative in sorted(added | changed, key=lambda path: len(path.parts), reverse=True):
+        destination = root / relative
+        if relative in added or baseline[relative] is None or current[relative] is None:
+            _remove(destination)
+    for relative in sorted(removed | changed, key=lambda path: (len(path.parts), path)):
+        destination = root / relative
+        if baseline[relative] is None:
+            destination.mkdir(parents=True, exist_ok=True)
+        else:
+            _copy_file(backup / relative, destination)
+
+
+def _monitor(startpath, backup, interval, restore):
+    if interval <= 0:
+        raise ValueError("Interval must be positive")
+    root, target = _paths(startpath, backup)
+    baseline = file_md5_build(target if restore else root)
+    while True:
+        current = file_md5_build(root)
+        for label, paths in zip(("Added", "Removed", "Changed"), _changes(baseline, current)):
+            for path in sorted(paths):
+                print(f"{label}: {path}", flush=True)
+        if restore:
+            _restore(root, target, baseline, current)
+        time.sleep(interval)
+
+
+def file_md5_check(startpath=".", *, interval=5):
+    _monitor(startpath, None, interval, restore=False)
+
+
+def file_md5_defense(startpath=".", backup=None, *, interval=5):
+    if interval <= 0:
+        raise ValueError("Interval must be positive")
+    root, target = _paths(startpath, backup)
+    if not target.exists():
+        file_backup(root, target)
+    _monitor(root, target, interval, restore=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=("backup", "check", "restore"))
+    parser.add_argument("directory", type=Path)
+    parser.add_argument("--backup", type=Path)
+    parser.add_argument("--interval", type=float, default=5)
+    args = parser.parse_args()
+    try:
+        if args.action == "backup":
+            print(file_backup(args.directory, args.backup))
+        elif args.action == "check":
+            file_md5_check(args.directory, interval=args.interval)
+        else:
+            file_md5_defense(args.directory, args.backup, interval=args.interval)
+    except KeyboardInterrupt:
+        pass
+    except (OSError, ValueError) as error:
+        parser.exit(1, f"{error}\n")
+
+
+if __name__ == "__main__":
+    main()
